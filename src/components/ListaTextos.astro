@@ -1,0 +1,35 @@
+---
+import { dataCurta, dataISO, type Texto } from '../lib/site';
+
+interface Props {
+  textos: Texto[];
+  /** Nível do título de cada item, para manter a hierarquia da página. */
+  nivel?: 'h2' | 'h3';
+}
+
+const { textos, nivel = 'h2' } = Astro.props;
+const Titulo = nivel;
+---
+
+<ol class="lista-textos" role="list">
+  {
+    textos.map((t) => (
+      <li class="item-texto">
+        <a class="item-texto-link" href={`/pesquisa/${t.id}/`}>
+          <span class="item-texto-meta rotulo">
+            <span>{t.numero}</span>
+            <time datetime={dataISO(t.data.data)}>{dataCurta(t.data.data)}</time>
+          </span>
+          <Titulo class="item-texto-titulo">{t.data.titulo}</Titulo>
+          <p class="item-texto-resumo">{t.data.resumo}</p>
+          {t.data.tags.length > 0 && (
+            <span class="item-texto-tags rotulo">
+              <span class="visualmente-oculto">Tags: </span>
+              {t.data.tags.join(' / ')}
+            </span>
+          )}
+        </a>
+      </li>
+    ))
+  }
+</ol>

@@ -1,0 +1,38 @@
+---
+interface Vizinho {
+  href: string;
+  titulo: string;
+  numero: string;
+}
+
+interface Props {
+  anterior?: Vizinho;
+  proximo?: Vizinho;
+  rotulo: string;
+}
+
+const { anterior, proximo, rotulo } = Astro.props;
+---
+
+{
+  (anterior || proximo) && (
+    <nav class="vizinhos" aria-label={rotulo}>
+      {anterior ? (
+        <a class="vizinho" href={anterior.href} rel="prev">
+          <span class="rotulo">Anterior / {anterior.numero}</span>
+          <span class="vizinho-titulo">{anterior.titulo}</span>
+        </a>
+      ) : (
+        <span class="vizinho vizinho-vazio" aria-hidden="true" />
+      )}
+      {proximo ? (
+        <a class="vizinho vizinho-proximo" href={proximo.href} rel="next">
+          <span class="rotulo">Próximo / {proximo.numero}</span>
+          <span class="vizinho-titulo">{proximo.titulo}</span>
+        </a>
+      ) : (
+        <span class="vizinho vizinho-vazio" aria-hidden="true" />
+      )}
+    </nav>
+  )
+}

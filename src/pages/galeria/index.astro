@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import GradeTrabalhos from '../../components/GradeTrabalhos.astro';
+import { trabalhos } from '../../lib/site';
+
+const lista = await trabalhos();
+---
+
+<Base titulo="Galeria" descricao="Trabalhos de Emanuel Eidt em arte digital: imagem, vídeo, som e experiências na web.">
+  <header class="cabeca-pagina">
+    <p class="rotulo cabeca-pagina-meta">
+      <span>02 / Galeria</span>
+      <span>{lista.length} {lista.length === 1 ? 'trabalho' : 'trabalhos'}</span>
+    </p>
+    <h1 class="titulo-pagina">Galeria</h1>
+    <p class="cabeca-pagina-intro">Trabalhos em imagem, vídeo, som e web, do mais recente ao mais antigo.</p>
+  </header>
+
+  {lista.length > 0 ? <GradeTrabalhos trabalhos={lista} prioridade /> : <p class="vazio">Nenhum trabalho publicado ainda.</p>}
+</Base>

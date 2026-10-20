@@ -1,0 +1,63 @@
+---
+import { Image } from 'astro:assets';
+import type { Trabalho } from '../lib/site';
+
+interface Props {
+  trabalhos: Trabalho[];
+  nivel?: 'h2' | 'h3';
+  /** A primeira imagem carrega sem espera quando a grade está no topo da página. */
+  prioridade?: boolean;
+}
+
+const { trabalhos, nivel = 'h2', prioridade = false } = Astro.props;
+const Titulo = nivel;
+
+const temMidia = (t: Trabalho) => {
+  const tipos: string[] = [];
+  if (t.data.video && t.data.video.discriminant !== 'nenhum') tipos.push('vídeo');
+  if (t.data.audio) tipos.push('áudio');
+  if (t.data.link) tipos.push('web');
+  return tipos;
+};
+---
+
+<ul class="grade-trabalhos" role="list">
+  {
+    trabalhos.map((t, i) => {
+      const capa = t.data.imagens[0];
+      const tipos = temMidia(t);
+      return (
+        <li class="card">
+          <a class="card-link" href={`/galeria/${t.id}/`}>
+            <div class="card-imagem">
+              <Image
+                src={capa.imagem}
+                alt={capa.alt}
+                widths={[400, 640, 960]}
+                sizes="(min-width: 1100px) 33vw, (min-width: 640px) 50vw, 100vw"
+                loading={prioridade && i === 0 ? 'eager' : 'lazy'}
+                fetchpriority={prioridade && i === 0 ? 'high' : undefined}
+              />
+            </div>
+            <div class="card-texto">
+              <span class="card-meta rotulo">
+                <span>{t.numero}</span>
+                <span>{t.data.ano}</span>
+              </span>
+              <Titulo class="card-titulo">{t.data.titulo}</Titulo>
+              <p class="card-midia rotulo">{t.data.midia}</p>
+              {tipos.length > 0 && (
+                <p class="card-tipos rotulo">
+                  <span class="visualmente-oculto">Contém: </span>
+                  {tipos.map((tipo) => (
+                    <span class="etiqueta">{tipo}</span>
+                  ))}
+                </p>
+              )}
+            </div>
+          </a>
+        </li>
+      );
+    })
+  }
+</ul>

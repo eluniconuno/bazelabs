@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import ListaTextos from '../../components/ListaTextos.astro';
+import { textos } from '../../lib/site';
+
+const lista = await textos();
+---
+
+<Base
+  titulo="Pesquisa"
+  descricao="Ensaios, artigos e notas de Emanuel Eidt sobre arte digital, inteligência artificial, novas mídias e som."
+>
+  <header class="cabeca-pagina">
+    <p class="rotulo cabeca-pagina-meta">
+      <span>01 / Pesquisa</span>
+      <span>{lista.length} {lista.length === 1 ? 'texto' : 'textos'}</span>
+      <a href="/rss.xml">RSS</a>
+    </p>
+    <h1 class="titulo-pagina">Pesquisa</h1>
+    <p class="cabeca-pagina-intro">Ensaios, artigos e notas escritos durante a pesquisa do laboratório.</p>
+  </header>
+
+  {lista.length > 0 ? <ListaTextos textos={lista} /> : <p class="vazio">Nenhum texto publicado ainda.</p>}
+</Base>

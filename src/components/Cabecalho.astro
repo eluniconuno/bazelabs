@@ -1,0 +1,29 @@
+---
+import { NAV } from '../lib/site';
+
+const atual = Astro.url.pathname;
+const ativo = (href: string) => atual === href || atual.startsWith(href);
+---
+
+<header class="topo">
+  <a class="marca" href="/">
+    <span class="marca-bloco" aria-hidden="true">BZL</span>
+    <span class="marca-nome">Baze Labs<span class="visualmente-oculto">, página inicial</span></span>
+  </a>
+  <nav class="nav" aria-label="Principal">
+    <ul>
+      {
+        NAV.map((item, i) => (
+          <li>
+            <a href={item.href} aria-current={ativo(item.href) ? 'page' : undefined}>
+              <span class="nav-num" aria-hidden="true">
+                0{i + 1}
+              </span>
+              {item.rotulo}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>

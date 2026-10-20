@@ -1,0 +1,85 @@
+---
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Vizinhos from '../../components/Vizinhos.astro';
+import { dataISO, dataLonga, textos, type Texto } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const lista = await textos();
+  return lista.map((texto, i) => ({
+    params: { slug: texto.id },
+    props: { texto, proximo: lista[i - 1], anterior: lista[i + 1] },
+  }));
+}
+
+interface Props {
+  texto: Texto;
+  anterior?: Texto;
+  proximo?: Texto;
+}
+
+const { texto, anterior, proximo } = Astro.props;
+const { titulo, data, resumo, capa, tags, referencias } = texto.data;
+const { Content } = await render(texto);
+const imagemCapa = capa?.discriminant === true ? capa.value : undefined;
+
+const vizinho = (t?: Texto) => t && { href: `/pesquisa/${t.id}/`, titulo: t.data.titulo, numero: t.numero };
+---
+
+<Base titulo={titulo} descricao={resumo} imagem={imagemCapa?.imagem} imagemAlt={imagemCapa?.alt} tipo="article" publicadoEm={data}>
+  <article class="artigo">
+    <header class="artigo-cabeca">
+      <p class="rotulo artigo-meta">
+        <a href="/pesquisa/">Pesquisa</a>
+        <span>{texto.numero}</span>
+        <time datetime={dataISO(data)}>{dataLonga(data)}</time>
+      </p>
+      <h1 class="titulo-artigo">{titulo}</h1>
+      <p class="artigo-resumo">{resumo}</p>
+      {
+        tags.length > 0 && (
+          <ul class="tags rotulo" aria-label="Tags">
+            {tags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    {
+      imagemCapa && (
+        <div class="artigo-capa">
+          <Image
+            src={imagemCapa.imagem}
+            alt={imagemCapa.alt}
+            widths={[640, 1024, 1600, 2000]}
+            sizes="100vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      )
+    }
+
+    <div class="corpo">
+      <Content />
+    </div>
+
+    {
+      referencias.length > 0 && (
+        <section class="referencias" aria-labelledby="referencias">
+          <h2 id="referencias" class="rotulo">Referências</h2>
+          <ol>
+            {referencias.map((ref) => (
+              <li>{ref}</li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+  </article>
+
+  <Vizinhos rotulo="Outros textos" anterior={vizinho(anterior)} proximo={vizinho(proximo)} />
+</Base>

@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base titulo="Página não encontrada" descricao="Esta página não existe no arquivo do Baze Labs." semIndice>
+  <section class="erro" aria-labelledby="erro-titulo">
+    <p class="rotulo cabeca-pagina-meta">
+      <span>Erro 404</span>
+      <span>Entrada inexistente</span>
+    </p>
+    <h1 class="erro-numero" id="erro-titulo">
+      404<span class="visualmente-oculto">: página não encontrada</span>
+    </h1>
+    <p class="erro-texto">Esta página não existe ou mudou de endereço.</p>
+    <ul class="erro-links" role="list">
+      <li><a class="botao" href="/">Página inicial</a></li>
+      <li><a class="botao" href="/pesquisa/">Pesquisa</a></li>
+      <li><a class="botao" href="/galeria/">Galeria</a></li>
+    </ul>
+  </section>
+</Base>

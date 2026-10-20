@@ -1,0 +1,51 @@
+---
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { embedDeVideo } from '../lib/site';
+
+interface Props {
+  titulo: string;
+  tipo: 'link' | 'arquivo';
+  valor: string;
+  poster?: ImageMetadata;
+}
+
+const { titulo, tipo, valor, poster } = Astro.props;
+const embed = tipo === 'link' ? embedDeVideo(valor) : null;
+const posterSrc = tipo === 'arquivo' && poster ? (await getImage({ src: poster, width: 1280, format: 'webp' })).src : undefined;
+---
+
+<figure class="midia midia-video">
+  <figcaption class="rotulo">Vídeo</figcaption>
+  {
+    tipo === 'arquivo' && (
+      <video controls preload="metadata" playsinline poster={posterSrc}>
+        <source src={valor} type="video/mp4" />
+        <p>
+          Seu navegador não reproduz este vídeo. <a href={valor}>Baixe o arquivo</a>.
+        </p>
+      </video>
+    )
+  }
+  {
+    tipo === 'link' && embed && (
+      <div class="video-embed">
+        <iframe
+          src={embed.src}
+          title={`Vídeo de ${titulo} no ${embed.servico}`}
+          loading="lazy"
+          allow="fullscreen; picture-in-picture; encrypted-media"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+        />
+      </div>
+    )
+  }
+  {
+    tipo === 'link' && !embed && (
+      <p>
+        <a href={valor}>Assistir ao vídeo</a>
+      </p>
+    )
+  }
+</figure>

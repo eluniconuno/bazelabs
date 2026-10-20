@@ -1,0 +1,72 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ListaTextos from '../components/ListaTextos.astro';
+import GradeTrabalhos from '../components/GradeTrabalhos.astro';
+import TituloSecao from '../components/TituloSecao.astro';
+import { SITE, textos, trabalhos } from '../lib/site';
+
+const home = await getEntry('paginas', 'home');
+if (!home) throw new Error('Conteúdo da Home não encontrado em src/content/paginas/home.mdoc');
+const { Content: Manifesto } = await render(home);
+
+const todosTextos = await textos();
+const todosTrabalhos = await trabalhos();
+
+const ultimosTextos = todosTextos.slice(0, 3);
+// Trabalhos marcados como destaque. Se nenhum estiver marcado, mostra os mais recentes.
+const marcados = todosTrabalhos.filter((t) => t.data.destaque);
+const destaques = (marcados.length > 0 ? marcados : todosTrabalhos).slice(0, 6);
+---
+
+<Base>
+  <section class="hero" aria-labelledby="nome">
+    <div class="hero-meta rotulo">
+      <span>BZL / Arquivo</span>
+      <span>{SITE.assinatura}</span>
+      <span>
+        {todosTextos.length} textos / {todosTrabalhos.length} trabalhos
+      </span>
+    </div>
+    <h1 class="hero-nome" id="nome">
+      <span class="hero-linha">Emanuel</span>
+      <span class="hero-linha">Eidt</span>
+      <span class="hero-apresentacao"><span class="visualmente-oculto">, </span>{home.data.apresentacao ?? 'artista visual'}</span>
+    </h1>
+  </section>
+
+  <section class="secao manifesto" aria-labelledby="manifesto">
+    <TituloSecao numero="00" titulo="Manifesto" id="manifesto" />
+    <div class="manifesto-texto">
+      <Manifesto />
+    </div>
+  </section>
+
+  {
+    ultimosTextos.length > 0 && (
+      <section class="secao" aria-labelledby="pesquisa-recente">
+        <TituloSecao
+          numero="01"
+          titulo="Pesquisa"
+          id="pesquisa-recente"
+          link={{ href: '/pesquisa/', rotulo: 'Todos os textos' }}
+        />
+        <ListaTextos textos={ultimosTextos} nivel="h3" />
+      </section>
+    )
+  }
+
+  {
+    destaques.length > 0 && (
+      <section class="secao" aria-labelledby="galeria-destaques">
+        <TituloSecao
+          numero="02"
+          titulo="Galeria"
+          id="galeria-destaques"
+          link={{ href: '/galeria/', rotulo: 'Todos os trabalhos' }}
+        />
+        <GradeTrabalhos trabalhos={destaques} nivel="h3" />
+      </section>
+    )
+  }
+</Base>

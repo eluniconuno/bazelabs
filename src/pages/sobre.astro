@@ -1,0 +1,78 @@
+---
+import { getEntry, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+
+const sobre = await getEntry('paginas', 'sobre');
+if (!sobre) throw new Error('Conteúdo do Sobre não encontrado em src/content/paginas/sobre.mdoc');
+const { Content } = await render(sobre);
+const { foto, formacao, email, redes } = sobre.data;
+const imagemFoto = foto?.discriminant === true ? foto.value : undefined;
+---
+
+<Base
+  titulo="Sobre"
+  descricao="Emanuel Eidt é artista visual e pesquisador em arte digital. Baze Labs é o seu espaço de pesquisa."
+  imagem={imagemFoto?.imagem}
+  imagemAlt={imagemFoto?.alt}
+>
+  <header class="cabeca-pagina">
+    <p class="rotulo cabeca-pagina-meta">
+      <span>03 / Sobre</span>
+      <span>Emanuel Eidt</span>
+    </p>
+    <h1 class="titulo-pagina">Sobre</h1>
+  </header>
+
+  <div class="sobre-grade">
+    <div class="corpo sobre-texto">
+      <Content />
+    </div>
+
+    <aside class="sobre-ficha" aria-label="Formação e contato">
+      {
+        imagemFoto && (
+          <div class="sobre-foto">
+            <Image src={imagemFoto.imagem} alt={imagemFoto.alt} widths={[400, 800]} sizes="(min-width: 900px) 33vw, 100vw" />
+          </div>
+        )
+      }
+      <dl class="ficha">
+        {
+          formacao.length > 0 && (
+            <div>
+              <dt class="rotulo">Formação</dt>
+              {formacao.map((f) => (
+                <dd>{f}</dd>
+              ))}
+            </div>
+          )
+        }
+        {
+          email && (
+            <div id="contato">
+              <dt class="rotulo">Contato</dt>
+              <dd>
+                <a href={`mailto:${email}`}>{email}</a>
+              </dd>
+            </div>
+          )
+        }
+        {
+          redes.length > 0 && (
+            <div>
+              <dt class="rotulo">Redes</dt>
+              {redes.map((r) => (
+                <dd>
+                  <a href={r.url} rel="me noopener">
+                    {r.nome}
+                  </a>
+                </dd>
+              ))}
+            </div>
+          )
+        }
+      </dl>
+    </aside>
+  </div>
+</Base>

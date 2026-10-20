@@ -1,0 +1,16 @@
+---
+interface Props {
+  numero: string;
+  titulo: string;
+  id: string;
+  link?: { href: string; rotulo: string };
+}
+
+const { numero, titulo, id, link } = Astro.props;
+---
+
+<div class="titulo-secao">
+  <span class="rotulo titulo-secao-num" aria-hidden="true">{numero}</span>
+  <h2 class="titulo-secao-texto" id={id}>{titulo}</h2>
+  {link && <a class="titulo-secao-link rotulo" href={link.href}>{link.rotulo}</a>}
+</div>
