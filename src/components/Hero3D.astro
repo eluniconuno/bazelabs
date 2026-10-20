@@ -1,0 +1,57 @@
+---
+// Área da nuvem de pontos na home. Sem JavaScript ou sem WebGL, fica só a moldura com os rótulos.
+---
+
+<div class="hero-3d" data-nuvem>
+  <div class="hero-3d-palco" data-nuvem-palco></div>
+  <p class="hero-3d-rotulo rotulo" aria-hidden="true">
+    <span>Fig. 00<span class="hero-3d-rotulo-extra"> / Nuvem de pontos</span></span>
+    <span data-nuvem-forma>&nbsp;</span>
+  </p>
+</div>
+
+<script>
+  const raiz = document.querySelector<HTMLElement>('[data-nuvem]');
+  const palco = raiz?.querySelector<HTMLElement>('[data-nuvem-palco]');
+  const rotuloForma = raiz?.querySelector<HTMLElement>('[data-nuvem-forma]');
+
+  const temWebGL = () => {
+    try {
+      const c = document.createElement('canvas');
+      return !!(c.getContext('webgl2') || c.getContext('webgl'));
+    } catch {
+      return false;
+    }
+  };
+
+  const carregar = async () => {
+    if (!raiz || !palco || !temWebGL()) return;
+    const { iniciarNuvem, FORMAS } = await import('../lib/nuvem');
+    const movimento = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const criar = () =>
+      iniciarNuvem({
+        container: palco,
+        estatico: movimento.matches,
+        aoMudarForma: (i) => {
+          if (rotuloForma) rotuloForma.textContent = `${String(i + 1).padStart(2, '0')} / ${FORMAS[i]}`;
+        },
+      });
+
+    let parar = criar();
+    raiz.dataset.pronto = '';
+
+    // Se a preferência de movimento mudar, a cena recomeça no modo certo.
+    movimento.addEventListener('change', () => {
+      parar();
+      parar = criar();
+    });
+  };
+
+  // Carrega depois que a página já foi desenhada, para não atrasar o conteúdo.
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => carregar(), { timeout: 1500 });
+  } else {
+    setTimeout(carregar, 200);
+  }
+</script>

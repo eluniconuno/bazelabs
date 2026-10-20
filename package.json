@@ -22,7 +22,8 @@
     "@keystatic/core": "^0.6.9",
     "astro": "^7.4.1",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "three": "^0.186.1"
   },
   "allowScripts": {
     "esbuild@0.28.1": true,
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.11",
+    "@types/three": "^0.186.0",
     "typescript": "^6.0.3"
   },
   "engines": {
