@@ -6,3 +6,6 @@ dist/
 .env.*
 !.env.example
 .DS_Store
+
+# Vídeos originais em alta. O site usa as cópias em public/media.
+Obras/

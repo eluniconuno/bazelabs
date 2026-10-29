@@ -35,11 +35,15 @@ export async function textos(): Promise<Texto[]> {
 /**
  * Trabalhos do mais recente ao mais antigo.
  * A numeração segue o ano: o trabalho mais antigo é GAL-001.
+ * No mesmo ano, desempata pelo campo "ordem" e depois pelo título.
  */
 export async function trabalhos(): Promise<Trabalho[]> {
   const todos = await getCollection('galeria');
   const cronologico = [...todos].sort(
-    (a, b) => a.data.ano - b.data.ano || a.data.titulo.localeCompare(b.data.titulo, 'pt-BR'),
+    (a, b) =>
+      a.data.ano - b.data.ano ||
+      (a.data.ordem ?? Infinity) - (b.data.ordem ?? Infinity) ||
+      a.data.titulo.localeCompare(b.data.titulo, 'pt-BR'),
   );
   return cronologico.map((t, i) => ({ ...t, numero: codigo('GAL', i + 1) })).reverse();
 }

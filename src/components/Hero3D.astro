@@ -6,14 +6,13 @@
   <div class="hero-3d-palco" data-nuvem-palco></div>
   <p class="hero-3d-rotulo rotulo" aria-hidden="true">
     <span>Fig. 00<span class="hero-3d-rotulo-extra"> / Nuvem de pontos</span></span>
-    <span data-nuvem-forma>&nbsp;</span>
+    <span class="hero-3d-linhas">New media / Sound poetics / Visual studies / Art &amp; AI</span>
   </p>
 </div>
 
 <script>
   const raiz = document.querySelector<HTMLElement>('[data-nuvem]');
   const palco = raiz?.querySelector<HTMLElement>('[data-nuvem-palco]');
-  const rotuloForma = raiz?.querySelector<HTMLElement>('[data-nuvem-forma]');
 
   const temWebGL = () => {
     try {
@@ -26,16 +25,13 @@
 
   const carregar = async () => {
     if (!raiz || !palco || !temWebGL()) return;
-    const { iniciarNuvem, FORMAS } = await import('../lib/nuvem');
+    const { iniciarNuvem } = await import('../lib/nuvem');
     const movimento = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     const criar = () =>
       iniciarNuvem({
         container: palco,
         estatico: movimento.matches,
-        aoMudarForma: (i) => {
-          if (rotuloForma) rotuloForma.textContent = `${String(i + 1).padStart(2, '0')} / ${FORMAS[i]}`;
-        },
       });
 
     let parar = criar();

@@ -33,6 +33,7 @@ const galeria = defineCollection({
     z.object({
       titulo: z.string(),
       ano: z.coerce.number().int(),
+      ordem: opcional(z.number().int()),
       midia: z.string(),
       destaque: z.boolean().default(false),
       imagens: z

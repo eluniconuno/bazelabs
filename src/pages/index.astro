@@ -24,10 +24,7 @@ const destaques = (marcados.length > 0 ? marcados : todosTrabalhos).slice(0, 6);
   <section class="hero" aria-labelledby="nome">
     <div class="hero-meta rotulo">
       <span>BZL / Arquivo</span>
-      <span>{SITE.assinatura}</span>
-      <span>
-        {todosTextos.length} textos / {todosTrabalhos.length} trabalhos
-      </span>
+      <span class="hero-assinatura">{SITE.assinatura}<span class="cursor-piscante" aria-hidden="true">_</span></span>
     </div>
     <Hero3D />
     <h1 class="hero-nome" id="nome">
@@ -38,10 +35,39 @@ const destaques = (marcados.length > 0 ? marcados : todosTrabalhos).slice(0, 6);
 
   <section class="secao manifesto" aria-labelledby="manifesto">
     <TituloSecao numero="00" titulo="Manifesto" id="manifesto" />
-    <div class="manifesto-texto">
-      <Manifesto />
+    <div class="manifesto-corpo">
+      <div class="manifesto-texto" id="manifesto-texto">
+        <Manifesto />
+      </div>
+      <button class="manifesto-alternar rotulo" type="button" aria-controls="manifesto-texto" aria-expanded="true" hidden>
+        <span class="manifesto-alternar-texto">Ler manifesto completo</span>
+        <span aria-hidden="true" class="manifesto-alternar-icone">+</span>
+      </button>
     </div>
   </section>
+
+  <script>
+    // Sanfona do manifesto: sem JS o texto aparece inteiro.
+    const texto = document.querySelector<HTMLElement>('#manifesto-texto');
+    const botao = document.querySelector<HTMLButtonElement>('.manifesto-alternar');
+    if (texto && botao && texto.querySelectorAll("p").length > 2) {
+      const rotulo = botao.querySelector('.manifesto-alternar-texto')!;
+      const icone = botao.querySelector('.manifesto-alternar-icone')!;
+      const definir = (aberto: boolean) => {
+        texto.classList.toggle('recolhido', !aberto);
+        botao.setAttribute('aria-expanded', String(aberto));
+        rotulo.textContent = aberto ? 'Recolher manifesto' : 'Ler manifesto completo';
+        icone.textContent = aberto ? '−' : '+';
+      };
+      definir(false);
+      botao.hidden = false;
+      botao.addEventListener('click', () => {
+        const abrir = botao.getAttribute('aria-expanded') !== 'true';
+        definir(abrir);
+        if (!abrir) texto.scrollIntoView({ block: 'nearest' });
+      });
+    }
+  </script>
 
   {
     ultimosTextos.length > 0 && (

@@ -134,6 +134,10 @@ export default config({
             pattern: { regex: /^\d{4}$/, message: 'Use quatro dígitos. Ex.: 2026.' },
           },
         }),
+        ordem: fields.integer({
+          label: 'Ordem no ano (opcional)',
+          description: 'Desempata trabalhos do mesmo ano na numeração GAL. O menor número vem primeiro.',
+        }),
         midia: fields.text({
           label: 'Mídia / técnica',
           description: 'Ex.: "Vídeo gerado por IA, som estéreo, 4 min".',
