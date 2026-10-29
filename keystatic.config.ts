@@ -27,6 +27,21 @@ const imagemComAlt = (directory: string, publicPath: string, label: string) =>
     alt: altObrigatorio(),
   });
 
+// Nomes de arquivo com espaços ou acentos quebram o build (o link sai com %20).
+// Ex.: "Captura de tela 2026.png" vira "captura-de-tela-2026.png".
+const nomeSeguro = (nome: string) => {
+  const ponto = nome.lastIndexOf('.');
+  const base = ponto > 0 ? nome.slice(0, ponto) : nome;
+  const ext = ponto > 0 ? nome.slice(ponto).toLowerCase() : '';
+  const limpo = base
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return (limpo || 'imagem') + ext;
+};
+
 // Editor de texto longo. Imagens no corpo exigem texto alternativo, e o título vira legenda.
 const corpoRico = (label: string, directory: string, publicPath: string) =>
   fields.markdoc({
@@ -47,6 +62,7 @@ const corpoRico = (label: string, directory: string, publicPath: string) =>
       image: {
         directory,
         publicPath,
+        transformFilename: nomeSeguro,
         schema: {
           alt: altObrigatorio(),
           title: fields.text({ label: 'Legenda (opcional)' }),
