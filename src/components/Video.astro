@@ -16,6 +16,7 @@ const embed = tipo === 'link' ? embedDeVideo(valor) : null;
 // Versão recortada para celular, se existir ao lado do arquivo: nome-mobile.mp4
 const mobile = tipo === 'arquivo' ? valor.replace(/\.mp4$/i, '-mobile.mp4') : undefined;
 const temMobile = mobile && mobile !== valor && existsSync(`public${mobile}`);
+const tipoArquivo = /\.webm$/i.test(valor) ? 'video/webm' : 'video/mp4';
 const posterSrc = tipo === 'arquivo' && poster ? (await getImage({ src: poster, width: 1280, format: 'webp' })).src : undefined;
 ---
 
@@ -25,7 +26,7 @@ const posterSrc = tipo === 'arquivo' && poster ? (await getImage({ src: poster, 
     tipo === 'arquivo' && (
       <video controls preload="metadata" playsinline poster={posterSrc}>
         {temMobile && <source src={mobile} type="video/mp4" media="(max-width: 699px)" />}
-        <source src={valor} type="video/mp4" />
+        <source src={valor} type={tipoArquivo} />
         <p>
           Seu navegador não reproduz este vídeo. <a href={valor}>Baixe o arquivo</a>.
         </p>

@@ -193,7 +193,8 @@ export default config({
             link: fields.url({ label: 'Link do vídeo', validation: { isRequired: true } }),
             arquivo: fields.file({
               label: 'Arquivo de vídeo',
-              description: 'Prefira vídeos curtos e leves, de até 20 MB. Para vídeos longos, use um link.',
+              description:
+                'Use MP4 (H.264 com áudio AAC): WebM e áudio Opus não abrem em muitos celulares. Prefira vídeos curtos e leves, de até 20 MB. Para vídeos longos, use um link.',
               directory: 'public/media/galeria',
               publicPath: '/media/galeria/',
               validation: { isRequired: true },
