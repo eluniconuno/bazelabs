@@ -1,0 +1,141 @@
+---
+titulo: Sinal_00000001.x
+ano: '2026'
+ordem: 0
+midia: >-
+  Videoarte digital com som. Vídeo gerado em software autoral com parâmetros de
+  glitch, simulação de CRT e tipografia (Orbitron); trilha sonora em live coding
+  (Sonic Pi) com auxílio de IA.
+destaque: false
+imagens:
+  - imagem: ../../assets/galeria/sinal-00000001-x/imagens/0/imagem.png
+    alt: >-
+      Arte digital tipográfica com estilo glitch neon, escrito sinal_00000001,
+      cortado por falhas de monitor crt, e uma esfera azul neon ao fundo
+video:
+  discriminant: arquivo
+  value: /media/galeria/sinal-00000001-x/video/value.mp4
+---
+*sinal\_00000001* é o primeiro registro publicado de um trabalho audiovisual em desenvolvimento. É um teste, e pode mudar nas próximas etapas.
+
+A imagem nasce de um software autoral, aqui usado com novos parâmetros de glitch, simulação de tela CRT e tipografia. O título, composto na fonte Orbitron, aparece como um sinal tentando se estabilizar. Ele é atravessado por linhas de varredura, deslocamentos cromáticos e uma forma esférica que interrompe a leitura, como um corpo estranho na transmissão. A falha não é acidente: é a linguagem do trabalho. O erro se torna a matéria da imagem.
+
+O som foi escrito em código no Sonic Pi. Ele constrói uma atmosfera escura e úmida: um zumbido elétrico grave, estática de tubo, rajadas de glitch digital, pulsos industriais, gotas em uma sala reverberante. Em intervalos aleatórios, surge um sinal de uma entidade distante. Cada execução gera uma versão diferente, porque o código trabalha com aleatoriedade. A trilha nunca se repete exatamente igual.
+
+Imagem e som simulam um ambiente de máquinas falhando, onde ruído, interferência e sinal se confundem.
+
+---
+
+**BAZE LAB // CRT INTERFERENCE SYSTEM**
+
+use_bpm 42
+
+set_volume! 2
+
+live_loop :power_grid do
+with_fx :lpf, cutoff: 50 do
+with_fx :reverb, room: 0.9, mix: 0.4 do
+synth :hollow,
+note: :e1,
+sustain: 6,
+release: 4,
+amp: 0.6
+end
+end
+sleep 6
+end
+
+live_loop :crt_noise do
+with_fx :hpf, cutoff: rrand(80,120) do
+with_fx :slicer,
+phase: [0.125,0.25].choose,
+mix: 0.4 do
+sample :elec_filt_snare,
+rate: rrand(0.2,0.5),
+amp: rrand(0.2,0.5),
+pan: rrand(-1,1)
+end
+end
+sleep rrand(0.08,0.25)
+end
+
+live_loop :glitches do
+sleep rrand(2,6)
+with_fx :bitcrusher,
+bits: [4,5,6].choose,
+sample_rate: [4000,6000,8000].choose do
+with_fx :echo,
+phase: 0.125,
+decay: 1.5,
+mix: 0.4 do
+sample :glitch_perc1,
+amp: rrand(0.4,1.2),
+rate: rrand(0.6,1.4),
+pan: rrand(-1,1)
+sleep 0.05
+sample :glitch_perc2,
+amp: rrand(0.3,0.8),
+rate: rrand(0.7,1.5),
+pan: rrand(-1,1)
+end
+end
+end
+
+live_loop :screen_pulse do
+with_fx :ixi_techno,
+phase: 4,
+mix: 0.3 do
+synth :prophet,
+note: [:e2,:fs2,:g2].choose,
+release: 1.5,
+cutoff: rrand(60,90),
+amp: 0.4,
+pulse_width: 0.2
+end
+sleep [2,4].choose
+end
+
+live_loop :crt_failures do
+sleep rrand(5,12)
+with_fx :distortion, distort: 0.7 do
+sample :elec_blip2,
+rate: rrand(0.1,0.3),
+amp: 0.9,
+pan: rrand(-1,1)
+sleep 0.1
+sample :elec_cymbal,
+rate: rrand(0.05,0.15),
+amp: 0.5
+end
+end
+
+live_loop :water_room do
+with_fx :reverb,
+room: 1,
+mix: 0.7 do
+sample :drum_cymbal_soft,
+start: 0.2,
+finish: 0.25,
+rate: 0.2,
+amp: 0.25,
+pan: rrand(-0.8,0.8)
+end
+sleep rrand(1.5,4)
+end
+
+live_loop :mars_entity do
+sleep rrand(8,16)
+with_fx :wobble,
+phase: 2,
+mix: 0.5 do
+with_fx :reverb,
+room: 1,
+mix: 0.6 do
+synth :dark_ambience,
+note: :e0,
+sustain: 4,
+release: 4,
+amp: 0.9
+end
+end
+end
